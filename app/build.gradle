@@ -1,0 +1,107 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
+    defaultConfig {
+        applicationId "ca.six.daily"
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName "0.1"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    // This is important, it will run lint checks but won't abort build
+    lintOptions {
+        abortOnError false
+    }
+}
+
+def supportVersion = "27.1.1"
+def rxbindingVersion = "2.0.0"
+def rxlifecycleVersion = "2.1.0"
+def leakcanaryVersion = "1.5.4"
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "com.android.support:appcompat-v7:$supportVersion"
+    implementation "com.android.support:design:$supportVersion"
+
+    implementation "ca.six.util:LogUtil:1.0.1"
+    implementation "com.squareup.picasso:picasso:2.5.2"
+
+    implementation "io.reactivex.rxjava2:rxjava:2.1.1"
+    implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
+    implementation "com.jakewharton.rxbinding2:rxbinding:$rxbindingVersion"
+    implementation "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$rxbindingVersion"
+    implementation "com.trello.rxlifecycle2:rxlifecycle:$rxlifecycleVersion"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-components:$rxlifecycleVersion"
+
+    implementation "com.squareup.okhttp3:okhttp:3.8.1"
+    testImplementation "com.squareup.okhttp3:mockwebserver:3.8.1"
+
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanaryVersion"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanaryVersion"
+    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanaryVersion"
+
+    testImplementation "junit:junit:4.12"
+    testImplementation "org.mockito:mockito-core:2.7.6"
+    testImplementation "org.robolectric:robolectric:3.4.2"
+    testImplementation "org.json:json:20160810"
+
+    androidTestImplementation "com.android.support.test:runner:1.0.2"
+    androidTestImplementation("com.android.support.test.espresso:espresso-core:2.2.2", {
+        exclude group: "com.android.support", module: "support-annotations"
+    })
+
+}
+
+class BuildTimeListener implements TaskExecutionListener, BuildListener{
+    private Clock clock
+    private times = []
+
+    @Override
+    void buildStarted(Gradle gradle) {    }
+
+    @Override
+    void beforeExecute(Task task) {
+        clock = new Clock(new Date().getTime())
+    }
+
+    @Override
+    void settingsEvaluated(Settings settings) {    }
+
+    @Override
+    void afterExecute(Task task, TaskState state) {
+        def timePassed = clock.startTime
+        times.add([timePassed, task.path])
+    }
+
+    @Override
+    void projectsLoaded(Gradle gradle) {     }
+    @Override
+    void projectsEvaluated(Gradle gradle) {    }
+
+    @Override
+    void buildFinished(BuildResult result) {
+        println "Task spend time (only tasks that is over 50ms): "
+        for(time in times){
+            if(time[0] > 50) {
+                printf "%7sms   %s\n", time  //不能用println, 因为没这方法. 我试过了
+            }
+        }
+    }
+}
+
+project.gradle.addListener(new BuildTimeListener())
+

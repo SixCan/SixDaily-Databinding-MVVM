@@ -1,0 +1,27 @@
+<html>
+<head>
+    <title>Details</title>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="initial-scale=1.0, maximum-scale=1.0,width=device-width,user-scalable=no">
+    <script type="text/javascript">
+        var isSame = loader.isTheSameCssFile();
+        var cssLink = '';
+
+        if(isSame) {
+            cssLink = './news_details.css';
+        } else {
+            cssLink = loader.getCssLink();
+        }
+        document.write('<link href="' + cssLink + '" rel="stylesheet" type="text/css">');
+    </script>
+</head>
+
+<body>
+
+    <script type="text/javascript">
+        document.write(loader.getBody());
+    </script>
+
+</body>
+</html>
