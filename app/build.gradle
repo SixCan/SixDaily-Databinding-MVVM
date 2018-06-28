@@ -24,6 +24,10 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    dataBinding {
+        enabled = true
+    }
 }
 
 def supportVersion = "27.1.1"
