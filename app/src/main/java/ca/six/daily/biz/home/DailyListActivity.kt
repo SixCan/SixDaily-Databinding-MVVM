@@ -23,19 +23,19 @@ class DailyListActivity : BaseActivity(), IDailyListView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_daily_list)
 
-        rvDailyList.layoutManager = LinearLayoutManager(this)
-        rvDailyList.addItemDecoration(WhiteSpaceDivider())
-
-        // for UI holders before we get the real data from server
-        val holderLists = arrayListOf<Int>(1, 2, 3, 4)
-        val tempAdapter = object : OneAdapter<Int>(R.layout.item_daily_list_holder) {
-            override fun apply(vh: RvViewHolder, t: Int, position: Int) {
-            }
-        }
-        tempAdapter.data = holderLists
-        rvDailyList.adapter = tempAdapter
-
-        presenter.requestData()
+//        rvDailyList.layoutManager = LinearLayoutManager(this)
+//        rvDailyList.addItemDecoration(WhiteSpaceDivider())
+//
+//        // for UI holders before we get the real data from server
+//        val holderLists = arrayListOf<Int>(1, 2, 3, 4)
+//        val tempAdapter = object : OneAdapter<Int>(R.layout.item_daily_list_holder) {
+//            override fun apply(vh: RvViewHolder, t: Int, position: Int) {
+//            }
+//        }
+//        tempAdapter.data = holderLists
+//        rvDailyList.adapter = tempAdapter
+//
+//        presenter.requestData()
 
     }
 

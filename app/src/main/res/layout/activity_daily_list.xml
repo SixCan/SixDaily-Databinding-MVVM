@@ -16,8 +16,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvDailyList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:items="@{viewmodel.items}" />
+            android:layout_height="match_parent" />
 
     </RelativeLayout>
 </layout>
