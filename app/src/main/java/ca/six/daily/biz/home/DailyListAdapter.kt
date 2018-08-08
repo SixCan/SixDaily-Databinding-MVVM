@@ -23,4 +23,8 @@ class DailyListAdapter(var data: List<ViewType<out Any>>) : RecyclerView.Adapter
         data[position].bind(holder)
     }
 
+    fun replaceData(data: List<ViewType<out Any>>) {
+        this.data = data
+        notifyDataSetChanged()
+    }
 }
