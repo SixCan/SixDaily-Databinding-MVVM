@@ -1,11 +1,17 @@
 package ca.six.daily.biz.home
 
+import android.content.Context
+import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.ViewGroup
+import ca.six.daily.R
+import ca.six.daily.databinding.ItemTitleBinding
 import ca.six.daily.view.RvViewHolder
 import ca.six.daily.view.ViewType
 
-class DailyListAdapter(var data: List<ViewType<out Any>>) : RecyclerView.Adapter<RvViewHolder>() {
+class DailyListAdapter: RecyclerView.Adapter<RvViewHolder>() {
+    var data: List<ViewType<out Any>> = ArrayList ()
 
     override fun getItemViewType(position: Int): Int {
         return data[position].getViewType()

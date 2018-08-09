@@ -1,5 +1,7 @@
 package ca.six.daily.view
 
+import android.databinding.DataBindingUtil
+import android.databinding.ViewDataBinding
 import android.support.v4.util.SparseArrayCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -42,8 +44,9 @@ class RvViewHolder private constructor(private val convertView: View) : Recycler
 
     companion object {
         fun createViewHolder(parent: ViewGroup, layoutId: Int): RvViewHolder {
-            val itemView = LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
-            val holder = RvViewHolder(itemView)
+            val inflater = LayoutInflater.from(parent.context)
+            val itemBinding: ViewDataBinding = DataBindingUtil.inflate(inflater, layoutId, parent, false)
+            val holder = RvViewHolder(itemBinding.root)
             return holder
         }
     }
