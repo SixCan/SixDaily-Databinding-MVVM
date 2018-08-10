@@ -1,5 +1,6 @@
 package ca.six.daily.biz.home
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
@@ -42,25 +43,25 @@ class DailyListActivity : BaseActivity(), IDailyListView {
 //        tempAdapter.data = holderLists
 //        rvDailyList.adapter = tempAdapter
 
-//        presenter.requestData()
-
         listBinding = ActivityDailyListBinding.inflate(layoutInflater)
+        val factory = ViewModelFactory.instance
+        listModel = ViewModelProviders.of(this, factory).get(DailyListViewModel::class.java)
+        listBinding.viewmodel = listModel
+
         val dailyListAdapter = DailyListAdapter()
         rvDailyList.adapter = dailyListAdapter
-
         rvDailyList.addOnItemTouchListener(object : OnRvItemClickListener(rvDailyList) {
             override fun onItemClick(holder: RecyclerView.ViewHolder) {
-                presenter.jumpToDetail(holder.adapterPosition)
+                listModel.jumpToDetail(holder.adapterPosition)
 
                 val tv = holder.itemView.findViewById(R.id.tvListItemTitle) as TextView
                 tv.setTextColor(0xff999999.toInt())
             }
         })
 
-        val factory = ViewModelFactory.instance
-        listModel = ViewModelProviders.of(this, factory).get(DailyListViewModel::class.java)
         listModel.requestData(dailyListAdapter)
-        listBinding.viewmodel = listModel
+
+        subscribe()
 
     }
 
@@ -73,10 +74,16 @@ class DailyListActivity : BaseActivity(), IDailyListView {
     }
 
     override fun jumpToDetilsPage(thisStoryID: Long, allIDs: LongArray) {
-        val it = Intent(this, DailyDetailActivity::class.java)
-        it.putExtra("it_detailID", thisStoryID)
-        it.putExtra("it_detailID_array", allIDs)
-        startActivity(it)
+
+    }
+
+    private fun subscribe() {
+        listModel.selectedItem.observe(DailyListActivity@this, Observer {
+            val detailIntent = Intent(this, DailyDetailActivity::class.java)
+            detailIntent.putExtra("it_detailID", it!![0] as Long)
+            detailIntent.putExtra("it_detailID_array", it[1] as LongArray)
+            startActivity(detailIntent)
+        })
     }
 
 }

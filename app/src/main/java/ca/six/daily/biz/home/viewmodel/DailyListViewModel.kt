@@ -1,5 +1,7 @@
 package ca.six.daily.biz.home.viewmodel
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.databinding.BaseObservable
 import android.databinding.ObservableArrayList
@@ -16,6 +18,7 @@ import ca.six.daily.view.ViewType
 import io.reactivex.Observable
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * @CopyRight six.ca
@@ -26,6 +29,7 @@ class DailyListViewModel : ViewModel() {
     val items = ObservableArrayList<ViewType<out Any>>()
     val isLoadingData = ObservableBoolean(false)
     val ids = ObservableArrayList<Long>()
+    val selectedItem = MutableLiveData<Array<Any>>()
     val cacheFileName = "news_latest.json"
     val formatterOut = SimpleDateFormat("MMM, dd yyyy", Locale.CANADA)
     val formatterIn = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
@@ -68,7 +72,10 @@ class DailyListViewModel : ViewModel() {
         if(item.getData() is Story) {
             val story = item.getData() as Story
             val idArray = ids.toLongArray()
-            //TODO view model onclick event
+            val selectedInfo = Array<Any>(2){}
+            selectedInfo.set(0, story.id)
+            selectedInfo.set(1, idArray)
+            selectedItem.postValue(selectedInfo)
         }
     }
 }
