@@ -1,12 +1,7 @@
 package ca.six.daily.biz.home
 
-import android.content.Context
-import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import ca.six.daily.R
-import ca.six.daily.databinding.ItemTitleBinding
 import ca.six.daily.view.RvViewHolder
 import ca.six.daily.view.ViewType
 

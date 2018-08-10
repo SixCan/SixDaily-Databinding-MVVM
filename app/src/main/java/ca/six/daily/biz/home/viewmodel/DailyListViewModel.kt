@@ -14,6 +14,8 @@ import ca.six.daily.utils.writeToCacheFile
 import ca.six.daily.view.RvViewHolder
 import ca.six.daily.view.ViewType
 import io.reactivex.Observable
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * @CopyRight six.ca
@@ -25,6 +27,8 @@ class DailyListViewModel : ViewModel() {
     val isLoadingData = ObservableBoolean(false)
     val ids = ObservableArrayList<Long>()
     val cacheFileName = "news_latest.json"
+    val formatterOut = SimpleDateFormat("MMM, dd yyyy", Locale.CANADA)
+    val formatterIn = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
 
     fun requestData(adapter: RecyclerView.Adapter<RvViewHolder>) {
         val observableCache = readCachedLatestNews()
@@ -41,7 +45,8 @@ class DailyListViewModel : ViewModel() {
                     listData
                 }
                 .map { resp ->
-                    items.add(ListTitleViewModel(resp.date))
+                    val date = formatterIn.parse(resp.date)
+                    items.add(ListTitleViewModel(formatterOut.format(date)))
                     resp.stories.forEach { story ->
                         items.add(ListItemViewModel(story))
                     }
