@@ -1,13 +1,11 @@
 package ca.six.daily.biz.home.viewmodel
 
 import android.databinding.DataBindingUtil
-import android.widget.ImageView
 import ca.six.daily.R
 import ca.six.daily.data.Story
 import ca.six.daily.databinding.ItemDailyListBinding
 import ca.six.daily.view.RvViewHolder
 import ca.six.daily.view.ViewType
-import com.squareup.picasso.Picasso
 
 class ListItemViewModel(val story: Story) : ViewType<Story> {
 
@@ -21,14 +19,10 @@ class ListItemViewModel(val story: Story) : ViewType<Story> {
         binding.viewmodel = this
         binding.executePendingBindings()
 
-        Picasso.with(binding.ivListItemTitle.context)
-                .load(story.images[0])
-                .into(binding.ivListItemTitle)
     }
 
     override fun getData(): Story {
         return story
     }
-
 
 }
