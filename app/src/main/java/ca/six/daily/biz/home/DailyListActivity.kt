@@ -3,6 +3,7 @@ package ca.six.daily.biz.home
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -29,10 +30,7 @@ class DailyListActivity : BaseActivity(), IDailyListView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_daily_list)
-
-        rvDailyList.layoutManager = LinearLayoutManager(this)
-        rvDailyList.addItemDecoration(WhiteSpaceDivider())
+//        setContentView(R.layout.activity_daily_list)
 
         // for UI holders before we get the real data from server
 //        val holderLists = arrayListOf(1, 2, 3, 4)
@@ -43,11 +41,13 @@ class DailyListActivity : BaseActivity(), IDailyListView {
 //        tempAdapter.data = holderLists
 //        rvDailyList.adapter = tempAdapter
 
-        listBinding = ActivityDailyListBinding.inflate(layoutInflater)
+        listBinding = DataBindingUtil.setContentView(this, R.layout.activity_daily_list)
         val factory = ViewModelFactory.instance
         listModel = ViewModelProviders.of(this, factory).get(DailyListViewModel::class.java)
         listBinding.viewmodel = listModel
 
+        rvDailyList.layoutManager = LinearLayoutManager(this)
+        rvDailyList.addItemDecoration(WhiteSpaceDivider())
         val dailyListAdapter = DailyListAdapter()
         rvDailyList.adapter = dailyListAdapter
         rvDailyList.addOnItemTouchListener(object : OnRvItemClickListener(rvDailyList) {
