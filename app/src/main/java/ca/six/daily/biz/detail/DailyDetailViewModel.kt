@@ -1,8 +1,8 @@
 package ca.six.daily.biz.detail
 
 import android.arch.lifecycle.ViewModel
+import android.databinding.DataBindingUtil
 import android.databinding.ObservableField
-import android.databinding.ObservableLong
 import ca.six.daily.core.network.HttpEngine
 import ca.six.daily.utils.readCachedDetails
 import ca.six.daily.utils.writeToCacheFile
@@ -13,7 +13,7 @@ import org.json.JSONObject
  * @CopyRight six.ca
  * Created by Heavens on 2018-08-13.
  */
-class DailyDetailViewModel(var id: ObservableLong) : ViewModel() {
+class DailyDetailViewModel(var id: Long, val adapter: RvDetailsAdapter) : ViewModel() {
     var body = ObservableField<String>()
     var imageUrl = ObservableField<String>()
     var title = ObservableField<String>()
@@ -25,20 +25,21 @@ class DailyDetailViewModel(var id: ObservableLong) : ViewModel() {
     }
 
     fun getDetails() {
-        val cachedObservable = readCachedDetails(id.get())
+        val cachedObservable = readCachedDetails(id)
                 .map {
                     isCached = true
                     it
                 }
 
-        val networkObservable = HttpEngine.request("news/${id.get()}")
+        val networkObservable = HttpEngine.request("news/$id")
                 .map { jsonResp ->
-                    writeToCacheFile(jsonResp, "news_${id.get()}.json")
+                    writeToCacheFile(jsonResp, "news_$id.json")
                     jsonResp
                 }
 
         Observable.concat(cachedObservable, networkObservable)
-                .map {
+                .map { it }
+                .subscribe{
                     parseResponse(it)
                 }
     }

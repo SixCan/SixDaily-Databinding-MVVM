@@ -1,13 +1,16 @@
 package ca.six.daily.biz.detail
 
 import android.content.Context
+import android.databinding.DataBindingUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.ImageView
 import ca.six.daily.R
 import ca.six.daily.data.DailyDetailResponse
+import ca.six.daily.databinding.ItemDailyDetailsBinding
 import ca.six.daily.view.RvViewHolder
 import com.squareup.picasso.Picasso
 
@@ -18,8 +21,8 @@ import com.squareup.picasso.Picasso
  */
 class RvDetailsAdapter(val ctx: Context, val ids: List<Long>, selectedId: Long, val layoutManager: LinearLayoutManager) :
         RecyclerView.Adapter<RvViewHolder>(), IDailyDetailView {
-    private var data = ArrayList<DailyDetailResponse>()
-    private var dataRight : ArrayList<Long> = ArrayList<Long>()
+    private var data = ArrayList<DailyDetailViewModel>()
+    private var dataRight : ArrayList<Long> = ArrayList()
     private val presenter: DailyDetailPresenter = DailyDetailPresenter(this)
     private var separatedPos: Int = 0
     private var currentPos: Int = 0
@@ -34,27 +37,36 @@ class RvDetailsAdapter(val ctx: Context, val ids: List<Long>, selectedId: Long, 
         refreshCount = ids.size - dataRight.size
 
         dataRight.forEach {
-            val item = DailyDetailResponse(emptyJsonStr)
+//            val item = DailyDetailResponse(emptyJsonStr)
+            val item = DailyDetailViewModel(it, this)
             data.add(item)
+//            item.getDetails()
         }
-        presenter.getDetails(selectedId)
+
+        val selectedViewModel = data[0]
+        selectedViewModel.getDetails()
     }
 
     override fun onBindViewHolder(holder: RvViewHolder, position: Int) {
-        val size = data.size
-        val banner = holder.getView<ImageView>(R.id.ivBanner)
-        val content = holder.getView<WebView>(R.id.wvContent)
-        content.settings.javaScriptEnabled = true
-        if (size > 0 && position < size) {
-            val item = data[position]
-            Picasso.with(ctx)
-                    .load(item.image)
-                    .error(R.drawable.loading_placeholder)
-                    .placeholder(R.drawable.loading_placeholder)
-                    .into(banner)
-            content.addJavascriptInterface(HtmlLoader(item.body, item.cssVer), "loader")
-        }
-        content.loadUrl("file:///android_asset/details.html")
+        val binding: ItemDailyDetailsBinding = DataBindingUtil.getBinding(holder.itemView)!!
+        binding.viewmodel = data[position]
+        binding.viewmodel!!.getDetails()
+        binding.executePendingBindings()
+
+//        val size = data.size
+//        val banner = holder.getView<ImageView>(R.id.ivBanner)
+//        val content = holder.getView<WebView>(R.id.wvContent)
+//        content.settings.javaScriptEnabled = true
+//        if (size > 0 && position < size) {
+//            val item = data[position]
+//            Picasso.with(ctx)
+//                    .load(item.image)
+//                    .error(R.drawable.loading_placeholder)
+//                    .placeholder(R.drawable.loading_placeholder)
+//                    .into(banner)
+//            content.addJavascriptInterface(HtmlLoader(item.body, item.cssVer), "loader")
+//        }
+//        content.loadUrl("file:///android_asset/details.html")
     }
 
     override fun getItemCount(): Int {
@@ -66,37 +78,37 @@ class RvDetailsAdapter(val ctx: Context, val ids: List<Long>, selectedId: Long, 
     }
 
     override fun updateDetails(details: DailyDetailResponse) {
-        data[currentPos] = details
-        notifyDataSetChanged()
+//        data[currentPos] = details
+//        notifyDataSetChanged()
     }
 
     fun changeCurrentPosition(pos: Int, isMoveEnd: Boolean) {
         println("change-pos: $pos")
-        val selectedId: Long
-        if(isMoveEnd && pos == 0 && refreshCount > 0){
-            data.add(0, DailyDetailResponse(emptyJsonStr))
-            refreshCount -= 1
-            dataRight.add(0, ids[refreshCount])
-            selectedId = dataRight[0]
-            currentPos = 0
-            println("xxl-add")
-        } else {
-            selectedId = dataRight[pos]
-            currentPos = pos
-            println("xxl-read")
-        }
-
-        println("change-current pos:$currentPos")
-        println("change-selected: $selectedId")
-
-        var isCached = false
-        data.forEach {
-            if (it.id == selectedId) {
-                isCached = true
-            }
-        }
-        if (!isCached) {
-            presenter.getDetails(selectedId)
-        }
+//        val selectedId: Long
+//        if(isMoveEnd && pos == 0 && refreshCount > 0){
+//            data.add(0, DailyDetailResponse(emptyJsonStr))
+//            refreshCount -= 1
+//            dataRight.add(0, ids[refreshCount])
+//            selectedId = dataRight[0]
+//            currentPos = 0
+//            println("xxl-add")
+//        } else {
+//            selectedId = dataRight[pos]
+//            currentPos = pos
+//            println("xxl-read")
+//        }
+//
+//        println("change-current pos:$currentPos")
+//        println("change-selected: $selectedId")
+//
+//        var isCached = false
+//        data.forEach {
+//            if (it.id == selectedId) {
+//                isCached = true
+//            }
+//        }
+//        if (!isCached) {
+//            presenter.getDetails(selectedId)
+//        }
     }
 }

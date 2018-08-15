@@ -1,9 +1,7 @@
 package ca.six.daily.biz.home.viewmodel
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.databinding.BaseObservable
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableBoolean
 import android.support.v7.widget.RecyclerView
@@ -18,7 +16,6 @@ import ca.six.daily.view.ViewType
 import io.reactivex.Observable
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
 
 /**
  * @CopyRight six.ca

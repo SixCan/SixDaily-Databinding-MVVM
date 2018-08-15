@@ -22,14 +22,13 @@ class DailyDetailActivity : BaseActivity() {
         setContentView(R.layout.activity_daily_detail)
         selectedId = intent.getLongExtra("it_detailID", DEFAULT_ID.toLong())
         ids = intent.getLongArrayExtra("it_detailID_array").asList()
-
-//        layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-//        rvList.layoutManager = layoutManager
-//        val snapHelper = DetailsSnapHelper()
-//        snapHelper.attachToRecyclerView(rvList)
-//        detailAdapter = RvDetailsAdapter(this, ids, selectedId, layoutManager)
-//        rvList.adapter = detailAdapter
-//        rvList.addOnScrollListener(DetailsOnScrollListener())
+        layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        rvList.layoutManager = layoutManager
+        val snapHelper = DetailsSnapHelper()
+        snapHelper.attachToRecyclerView(rvList)
+        detailAdapter = RvDetailsAdapter(this, ids, selectedId, layoutManager)
+        rvList.adapter = detailAdapter
+        rvList.addOnScrollListener(DetailsOnScrollListener())
     }
 
     override fun onDestroy() {
